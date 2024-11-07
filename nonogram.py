@@ -145,15 +145,6 @@ if __name__ == "__main__":
     
     cnf = create_cnf(rows, columns)
     
-    for row in range(N):
-        for column in range(M):
-            for block in range(len(rows[row])):
-                print("R:", row, column, block, row_block_variable(row, column, block))
-                
-    for row in range(N):
-        for column in range(M):
-            for block in range(len(columns[column])):
-                print("C:", row, column, block, column_block_variable(row, column, block))
     
     store_cnf(cnf, args.formula)
     
