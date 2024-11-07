@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse 
+import subprocess
 
 def load_input(input_file):
     with open(input_file) as file:
@@ -130,14 +131,55 @@ def store_cnf(cnf, output_file):
             for var in clause:
                 file.write(f"{var} ")
             file.write("0\n")
+
+def process_cnf(cnf_file, solver_file):
+    return subprocess.run(['./' + solver_file, '-model', cnf_file], stdout=subprocess.PIPE)
+
+def output_results(result, output_file = ""):
+    for line in result.stdout.decode('utf-8').split('\n'):
+        if len(line) < 1000:
+            print(line)                
+        
+        
+    if (result.returncode == 20):
+        return
+
+    model = []
+    for line in result.stdout.decode('utf-8').split('\n'):
+        if line.startswith("v"):
+            vars = line.split(" ")
+            vars.remove("v")
+            model.extend(int(v) for v in vars)      
+            
+    model = model[: N * M]
     
+    picture = [['.' for _ in range(M)] for _ in range(N)]
+    for row in range(N):
+        for column in range(M):
+            if model[field_variable(row, column) - 1] > 0:
+                picture[row][column] = '#' 
+        
+    if output_file != "":
+        with open(output_file, "w") as file:
+            for row in picture:
+                for i in row:
+                    file.write(i)
+                file.write("\n")  
+    else:
+        for row in picture:
+            for i in row:
+                print(i, end = "")
+            print()    
+        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = "Script that finds a solution for a nonogram or tells that no such exist.")
     
-    parser.add_argument("-i", "--input", default = "sample_inputs/3x3-sat.in", help = "path of an input file", type = str)
+    parser.add_argument("-i", "--input", default = "input.txt", help = "path of an input file", type = str)
     parser.add_argument("-f", "--formula", default = "formula.cnf", help = "path of a file for a cnf formula (in DIMACS format)", type = str)
-    parser.add_argument("-o", "--output", default = "output.txt", help = "path of an output file", type = str)
+    parser.add_argument("-o", "--output", default = "", help = "path of an output file", type = str)
+    parser.add_argument("-s", "--solver", default = "glucose", help = "path to a sat-solver file", type = str)
+
 
     args = parser.parse_args()
     
@@ -145,7 +187,8 @@ if __name__ == "__main__":
     
     cnf = create_cnf(rows, columns)
     
-    
     store_cnf(cnf, args.formula)
     
+    result = process_cnf(args.formula, args.solver)
+    output_results(result, args.output)
     
