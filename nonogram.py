@@ -142,6 +142,11 @@ def output_results(result, output_file = ""):
         
         
     if (result.returncode == 20):
+        if output_file != "":
+            with open(output_file, "w") as file:
+                file.write("Unsolvable")
+        else:
+            print("Unsolvable")
         return
 
     model = []
