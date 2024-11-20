@@ -43,23 +43,29 @@ def generate_input_file(picture, file_name):
                 file.write(f"{block} ")
             file.write("\n")
         
-def make_experiment(range, output_file):
-    for size in range:
-        generate_input_file(random_picture(size), f"./experiments/inputs/{size}.txt")
-    
+def make_experiment(input_files, output_file):
     with open(output_file, "w") as file:
-        for size in range:  
-            print(f"processing {size}x{size} matrix experiment...")
+        for input_file in input_files:  
+            print(f"processing {input_file} experiment...")
             start_time = time.time()
             
-            subprocess.run(['./nonogram.py', f'-i./experiments/inputs/{size}.txt'], stdout=subprocess.PIPE)
+            subprocess.run(['./nonogram.py', f'-i{input_file}'], stdout=subprocess.PIPE)
             
             spent_time = time.time() - start_time
-            file.write(f"{size} {spent_time}\n")
+            print(spent_time)
+            file.write(f"{input_file} {round(spent_time, 3)}\n")
+    
     
     
     
 
 if __name__ == "__main__":
     
-    make_experiment(range(5, 65, 5), "./experiments/experiment_results.txt")
+    input_files = []
+    
+    for size in range(3, 46, 3):
+        file_name = f"experiments/inputs/{size}.txt"
+        generate_input_file(random_picture(size), file_name)
+        input_files.append(file_name)
+    
+    make_experiment(input_files, "experiments/experiment_results.txt")

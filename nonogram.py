@@ -144,9 +144,9 @@ def output_results(result, output_file = ""):
     if (result.returncode == 20):
         if output_file != "":
             with open(output_file, "w") as file:
-                file.write("Unsolvable")
+                file.write("unsolvable")
         else:
-            print("Unsolvable")
+            print("unsolvable")
         return
 
     model = []
@@ -162,7 +162,7 @@ def output_results(result, output_file = ""):
     for row in range(N):
         for column in range(M):
             if model[field_variable(row, column) - 1] > 0:
-                picture[row][column] = '#' 
+                picture[row][column] = '#'
         
     if output_file != "":
         with open(output_file, "w") as file:
@@ -196,4 +196,3 @@ if __name__ == "__main__":
     
     result = process_cnf(args.formula, args.solver)
     output_results(result, args.output)
-    
