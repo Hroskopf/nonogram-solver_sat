@@ -180,11 +180,11 @@ def output_results(result, output_file = ""):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = "Script that finds a solution for a nonogram or tells that no such exist.")
     
-    parser.add_argument("-i", "--input", default = "input.txt", help = "path of an input file", type = str)
-    parser.add_argument("-f", "--formula", default = "formula.cnf", help = "path of a file for a cnf formula (in DIMACS format)", type = str)
-    parser.add_argument("-o", "--output", default = "", help = "path of an output file", type = str)
-    parser.add_argument("-s", "--solver", default = "glucose", help = "path to a sat-solver file", type = str)
-
+    parser.add_argument("-i", "--input", default = "input.txt", help = "path of an input file | default = input.txt", type = str)
+    parser.add_argument("-f", "--formula", default = "formula.cnf", help = "output file for a cnf formula (in DIMACS format) | default = formula.cnf", type = str)
+    parser.add_argument("-o", "--output", default = "", help = "path of an output file for a picture | if not setted - into std out", type = str)
+    parser.add_argument("-s", "--solver", default = "glucose", help = "path to a sat-solver file | default = glucose", type = str)
+ 
 
     args = parser.parse_args()
     
