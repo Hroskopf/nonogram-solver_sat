@@ -63,7 +63,7 @@ if __name__ == "__main__":
     
     input_files = []
     
-    for size in range(3, 46, 3):
+    for size in range(3, 49, 3):
         file_name = f"experiments/inputs/{size}.txt"
         generate_input_file(random_picture(size), file_name)
         input_files.append(file_name)
