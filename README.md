@@ -114,7 +114,7 @@ Nyní napíšeme všechna potřebná omezení:
 
 - pokud je buňka pole rovna jedné, pak je v jejím řádku nějaký blok, který ji zakrývá a rovná se 1 : $p(i, j) \implies (\bigvee \limits_k (\bigvee \limits_{j'} rb(i, j', k)))$, kde $j' = max(1, j - r[i, k] + 1, 1)\ ...\ j$ (poněkud ošklivá omezení kvůli tomu, že nechceme blok, který by začínal zápornými čísly). Nebo ve formátu CNF – klauzule: $\lnot p(i, j) \lor (\bigvee \limits_k (\bigvee \limits_{j'} rb(i, j', k)))$
 
-- analogicky pro sloupci: $\lnot p(i, j) \lor (\bigvee \limits_k (\bigvee \limits_{i'} rb(i', j, k)))$, kde $i' = max(1, i - s[j, k] + 1, 1)\ ...\ i$
+- analogicky pro sloupci: $\lnot p(i, j) \lor (\bigvee \limits_k (\bigvee \limits_{i'} cb(i', j, k)))$, kde $i' = max(1, i - s[j, k] + 1, 1)\ ...\ i$
 
 ## Experiment
 
