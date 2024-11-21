@@ -5,6 +5,7 @@ import time
 import subprocess
 
 def random_picture(n):
+    # generates a random picture
     picture = [[0 for _ in range(n)] for _ in range(n)]
     for i in range(n):
         for j in range(n):
@@ -12,6 +13,7 @@ def random_picture(n):
     return picture
 
 def get_blocks(row):
+    # returns an array of blocks for given row
     blocks = []
     row.append(0)
     cnt = 0
@@ -25,6 +27,7 @@ def get_blocks(row):
     return blocks
 
 def generate_input_file(picture, file_name):
+    # generates a file with decoded picture
     n = len(picture)
     with open(file_name, "w") as file:
         file.write(f"{n} {n}\n\n")
@@ -44,6 +47,8 @@ def generate_input_file(picture, file_name):
             file.write("\n")
         
 def make_experiment(input_files, output_file):
+    # provides an experiment on given input_file
+    # mesures time needed to procces given image and outputs it as a row to a output_file
     with open(output_file, "w") as file:
         for input_file in input_files:  
             print(f"processing {input_file} experiment...")
