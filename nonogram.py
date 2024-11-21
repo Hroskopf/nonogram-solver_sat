@@ -4,6 +4,10 @@ import argparse
 import subprocess
 
 def load_input(input_file):
+    # loads the input from input_file
+    # creates global variable N and M for the field sizes
+    # returns two arrays which are arrays of row and column blocks
+    
     with open(input_file) as file:
         global M
         global N
@@ -25,17 +29,24 @@ def load_input(input_file):
         
 
 def field_variable(i, j):
+    # returns number of variable in CNF corresponding to (i, j)-th cell in a field
     return 1 + i * M + j
 
 def row_block_variable(i, j, k):
+    # returns the number of variable corresponding to k-th block of i-th row, that begins in column j
     return 1 + N * M + i * M * M + j * M + k
 
 def column_block_variable(i, j, k):
+    # returns the number of variable corresponding to k-th block of j-th column, that begins in row i 
     return 1 + N * M + N * M * M + i * N * M + j * N + k
 
 def create_cnf(rows, columns):
+    #creates a CNF formule and returns it
+    #the formule is returned in DIMACS format as an array of clauses
     
     clauses = []
+    
+    # if block variable is equal to 1 then all the corresponding field cells needs to be filled
     for row in range(N):
         for column in range(M):
             for block in range(len(rows[row])):
@@ -56,6 +67,7 @@ def create_cnf(rows, columns):
                 for i in range(block_len):
                     clauses.append([-column_block_variable(row, column, block), field_variable(row + i, column)])
     
+    # each block begins in one cell
     for row in range(N):
         for block in range(len(rows[row])):
             for column_1 in range(M):
@@ -72,19 +84,20 @@ def create_cnf(rows, columns):
                         continue
                     clauses.append([-column_block_variable(row_1, column, block), -column_block_variable(row_2, column, block)])
     
-    
+    # first block exists
     for row in range(N):
         clause = []
         for column in range(M):
             clause.append(row_block_variable(row, column, 0))
         clauses.append(clause)
-        
+    
     for column in range(M):
         clause = []
         for row in range(N):
             clause.append(column_block_variable(row, column, 0))
         clauses.append(clause)
         
+    # if i-th block exists, then (i + 1)-th also exists and begins in allowed cell
     for row in range(N):
         for column in range(M):
             for block in range(1, len(rows[row])):
@@ -103,6 +116,7 @@ def create_cnf(rows, columns):
                     clause.append(column_block_variable(next_row, column, block))
                 clauses.append(clause)
                 
+    # if field cell is filled then exists some row block and some column block, that contains this cell
     for row in range(N):
         for column in range(M):
             clause = [-field_variable(row, column)]
@@ -125,6 +139,7 @@ def create_cnf(rows, columns):
 
                                         
 def store_cnf(cnf, output_file):
+    # stores a cnf formule to a corresponding file 
     with open(output_file, "w") as file:
         file.write(f"p cnf {str(N * M + N * M * M + N * N * M)} {str(len(cnf))}\n")
         for clause in cnf:
@@ -133,9 +148,12 @@ def store_cnf(cnf, output_file):
             file.write("0\n")
 
 def process_cnf(cnf_file, solver_file):
+    # runs a solver on a given cnf file
     return subprocess.run(['./' + solver_file, '-model', cnf_file], stdout=subprocess.PIPE)
 
 def output_results(result, output_file = ""):
+    # gets results from a solver and decodes it to a readable format
+    # stores the result to a output_file or write it to std out
     for line in result.stdout.decode('utf-8').split('\n'):
         if len(line) < 1000:
             print(line)                
