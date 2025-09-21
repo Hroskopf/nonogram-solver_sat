@@ -1,2 +1,4 @@
 *.cnf
 *.txt
+.DS_Store
+glucose-syrup

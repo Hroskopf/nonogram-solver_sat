@@ -8,22 +8,26 @@ def load_input(input_file):
     # creates global variable N and M for the field sizes
     # returns two arrays which are arrays of row and column blocks
     
-    with open(input_file) as file:
-        global M
-        global N
-        lines = []
-        for line in file:
-            lines.append(line.split())
-        N = int(lines[0][0])
-        M = int(lines[0][1])
-        
-        rows = []
-        columns = []
-        for i in range(2, N + 2):
-            rows.append([*map(int, lines[i])])
+    try:
+        with open(input_file) as file:
+            global M
+            global N
+            lines = []
+            for line in file:
+                lines.append(line.split())
+            N = int(lines[0][0])
+            M = int(lines[0][1])
             
-        for i in range(N + 3, N + M + 3):
-            columns.append([*map(int, lines[i])])
+            rows = []
+            columns = []
+            for i in range(2, N + 2):
+                rows.append([*map(int, lines[i])])
+                
+            for i in range(N + 3, N + M + 3):
+                columns.append([*map(int, lines[i])])
+    except:
+        print("Provided file does not exist...")
+        exit()
         
     return (rows, columns)
         
@@ -201,7 +205,7 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--input", default = "input.txt", help = "path of an input file | default = input.txt", type = str)
     parser.add_argument("-f", "--formula", default = "formula.cnf", help = "output file for a cnf formula (in DIMACS format) | default = formula.cnf", type = str)
     parser.add_argument("-o", "--output", default = "", help = "path of an output file for a picture | if not setted - into std out", type = str)
-    parser.add_argument("-s", "--solver", default = "glucose", help = "path to a sat-solver file | default = glucose", type = str)
+    parser.add_argument("-s", "--solver", default = "glucose-syrup", help = "path to a sat-solver file | default = glucose-syrup", type = str)
  
 
     args = parser.parse_args()
